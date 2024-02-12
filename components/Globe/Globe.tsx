@@ -17,7 +17,7 @@ const Globe: FC<{ style?: React.CSSProperties }> = ({ style }) => {
     const globeAddedRef = useRef<boolean>(false); // like a state variable but won't trigger rerender
     const sceneRef = useRef<THREE.Scene | null>(null);
     const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
-    const ambientLightRef = useRef<THREE.AmbientLight| null>(null);
+    // const ambientLightRef = useRef<THREE.AmbientLight| null>(null);
 
     const { globe, isLoading } = useGlobeObject({ renderer: rendererRef.current, scene: sceneRef.current });
 
@@ -55,9 +55,14 @@ const Globe: FC<{ style?: React.CSSProperties }> = ({ style }) => {
     }
 
     // Instantiate ambient light
-    if (!ambientLightRef.current) {
-        ambientLightRef.current = new THREE.AmbientLight(0xFFFFFF, 3.1);
-    }
+    // if (!ambientLightRef.current) {
+    //     // ambientLightRef.current = new THREE.AmbientLight(0xFFF9EA, 3.1);
+    //     ambientLightRef.current = new THREE.AmbientLight(0xFFFFFF, 2);
+
+    // }
+
+    const ambientLightRef = new THREE.AmbientLight(0xffffff, 1);
+
 
     // Initialize globe
     useEffect(() => {
@@ -65,6 +70,10 @@ const Globe: FC<{ style?: React.CSSProperties }> = ({ style }) => {
 
         // Renderer setup
         const renderer = new THREE.WebGLRenderer({ alpha: true });
+        // renderer.setClearColor(0Xfff5dc, 0);
+        // renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        // renderer.toneMappingExposure = .5;
+        // renderer.physicallyCorrectLights = true;
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
         divRef.current.appendChild(renderer.domElement);
@@ -75,29 +84,16 @@ const Globe: FC<{ style?: React.CSSProperties }> = ({ style }) => {
         //     sceneRef.current.add(axesHelper);
         // }
 
-        // Camera setup
-        if (cameraRef.current) {
-            cameraRef.current.position.z = 50;
-            cameraRef.current.position.y = 30;
-            cameraRef.current.position.x = 80;
-            cameraRef.current.lookAt(new THREE.Vector3(0,0,0));
-        }
-
-        // Light setup
-        if (sceneRef.current && ambientLightRef.current) {
-            sceneRef.current.add(ambientLightRef.current);
-        }
-
         // Add globe to scene
         if (globe && sceneRef.current &&!globeAddedRef.current) {
             sceneRef.current.add(globe);
             globeAddedRef.current = true;
         }
 
-        // Render scene and camera
-        if (renderer && sceneRef.current && cameraRef.current) {
-            renderer.render(sceneRef.current, cameraRef.current);
-        }
+        // Light setup
+        // if (sceneRef.current && ambientLightRef) {
+        //     sceneRef.current.add(ambientLightRef);
+        // }
 
         // Initialize scale and position
         if (globe) {

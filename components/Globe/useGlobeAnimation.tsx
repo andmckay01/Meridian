@@ -30,9 +30,9 @@ const useGlobeAnimation = (
                 globe.rotation.y -= 0.00055 + scrollDelta * 2;
             }
 
-            camera.position.y = 30 - currentScrollYProgress * 95;
-            camera.position.z = 50 - currentScrollYProgress * 10;
-            camera.position.x = 80 - currentScrollYProgress * 16;
+            camera.position.y = 5 - currentScrollYProgress * 95;
+            camera.position.z = 20 - currentScrollYProgress * 10;
+            camera.position.x = 20 - currentScrollYProgress * 16;
             camera.lookAt(new THREE.Vector3(0, 0, 0));
 
             if (rendererRef.current) {

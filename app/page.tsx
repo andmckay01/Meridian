@@ -26,6 +26,10 @@ const Globe = dynamic(() => import('../components/Globe/Globe'), {
   // loading: () => <PlaceholderMap/> // removed for now – would rather have nothing for .5 seconds
 });
 
+const LoadingAnimation = dynamic(() => import('../components/Animation/LoadingAnimation'), {
+  ssr: false,
+});
+
 const teamMembers = [
   {
       name: "Devon Gethers",
@@ -232,7 +236,6 @@ const latestCardContainerStyle: React.CSSProperties = {
 const Home: FC = () => {
   return (
     <>
-    {/* <LoadingAnimation /> */}
     {/* <div className="loader"></div> */}
       <Navbar />
       <FillVertical side="right"/>
@@ -358,7 +361,9 @@ const Home: FC = () => {
           <Section id="section7_footer">
               <Footer />
           </Section>
-        </main>              
+        </main>      
+
+        {/* <LoadingAnimation />         */}
         <Globe style={globeStyle} />
     </>
   );

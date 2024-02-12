@@ -19,7 +19,7 @@ const LoadingAnimation: FC = () => {
     backgroundColor: '#FFF5DC',
     opacity: animationPlayed ? 0 : 1,
     transition: 'opacity 0.5s ease',
-    zIndex: 1000,
+    zIndex: animationPlayed? -1000 : 1000,
   };
 
   useEffect(() => {
