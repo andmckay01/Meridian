@@ -2,10 +2,17 @@
 
 import { CSSProperties, FC, useEffect, useRef, useState } from 'react';
 import lottie from 'lottie-web';
+import useCleanAnimation from './useCleanAnimation';
 
-const LoadingAnimation: FC = () => {
+interface LoadingAnimationProps {
+  onAnimationComplete: () => void;
+}
+
+const LoadingAnimation: FC<LoadingAnimationProps> = ({ onAnimationComplete }) => {
   const animationContainer = useRef<HTMLDivElement>(null);
   const [animationPlayed, setAnimationPlayed] = useState(false);
+
+  useCleanAnimation(animationPlayed);
 
   const containerStyle: CSSProperties = {
     position: 'fixed',
@@ -13,7 +20,7 @@ const LoadingAnimation: FC = () => {
     left: 0,
     width: '100%',
     height: '100%',
-    display: 'flex',
+    display: animationPlayed ? 'none' : 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFF5DC',
@@ -34,6 +41,7 @@ const LoadingAnimation: FC = () => {
 
       animation.addEventListener('complete', () => {
         setAnimationPlayed(true);
+        onAnimationComplete();
       });
 
       return () => animation.destroy(); // Cleanup

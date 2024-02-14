@@ -16,14 +16,22 @@ import LatestContentCard from '@/components/UI/LatestContentCard';
 import Footer from '@/components/UI/Footer';
 import '../components/UI/ui.css';
 import FillVertical from '@/components/Structural/FillVertical';
-// import LoadingAnimation from '@/components/Animation/LoadingAnimation';
+import { SphereProvider } from '@/components/Globe/SphereContext';
 
 const ClientSideAnimationWrapper = dynamic(() => import('../components/Animation/ClientSideAnimationWrapper'), { ssr: false });
 
 // dynamically load the globe only when DOM is present
-const Globe = dynamic(() => import('../components/Globe/Globe'), {
+// const Globe = dynamic(() => import('../components/Globe/Globe'), {
+//   ssr: false,
+//   // loading: () => <PlaceholderMap/> // removed for now – would rather have nothing for .5 seconds
+// });
+
+// const LoadingAnimation = dynamic(() => import('../components/Animation/LoadingAnimation'), {
+//   ssr: false,
+// });
+
+const AnimationState = dynamic(() => import('../components/Animation/AnimationState'), {
   ssr: false,
-  // loading: () => <PlaceholderMap/> // removed for now – would rather have nothing for .5 seconds
 });
 
 const teamMembers = [
@@ -130,15 +138,6 @@ const mainContentStyle: React.CSSProperties = {
   top: '0',
   marginLeft: 'auto',
   marginRight: 'auto',
-};
-
-const globeStyle: React.CSSProperties = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  zIndex: -2
 };
 
 const landingStyle: React.CSSProperties = {
@@ -358,8 +357,11 @@ const Home: FC = () => {
           <Section id="section7_footer">
               <Footer />
           </Section>
-        </main>              
-        <Globe style={globeStyle} />
+        </main>   
+        <SphereProvider>
+          <AnimationState />
+        </SphereProvider>
+
     </>
   );
 };

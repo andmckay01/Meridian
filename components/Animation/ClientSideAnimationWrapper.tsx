@@ -11,7 +11,7 @@ interface Props {
 const ClientSideAnimationWrapper: FC<Props> = ({ children }) => {
   const [isAnimating, setIsAnimating] = useState<boolean>(true);
 
-  useCleanAnimation(isAnimating);
+  // useCleanAnimation(isAnimating);
 
   useEffect(() => {
     // Start the animation
