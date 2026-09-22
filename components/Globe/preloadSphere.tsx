@@ -1,3 +1,4 @@
+import { assetPath } from '@/site.config.mjs';
 import * as THREE from 'three';
 
 export const preloadSphere = async () => {
@@ -7,10 +8,10 @@ export const preloadSphere = async () => {
       new THREE.TextureLoader(manager).load(path, resolve, undefined, reject);
     });
 
-  const texture = await loadTexture('texture-base.png');
+  const texture = await loadTexture(assetPath('/texture-base.png'));
   texture.colorSpace = THREE.SRGBColorSpace;
 
-  const texturePole = await loadTexture('texture-pole.png');
+  const texturePole = await loadTexture(assetPath('/texture-pole.png'));
   texturePole.colorSpace = THREE.SRGBColorSpace;
 
   const geometry = new THREE.SphereGeometry(1.5, 111, 111);

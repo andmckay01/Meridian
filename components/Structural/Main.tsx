@@ -28,7 +28,6 @@ const Main: React.FC<Props> = ({ children, isAnimating, style }) => {
         children,
         (
           child, //Loop over all children and provide them with the isAnimating prop
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         ) => cloneElement(child as ReactElement<ChildrenProps>, { isAnimating }),
       )}
     </main>

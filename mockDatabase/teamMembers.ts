@@ -4,10 +4,6 @@ type TeamMember = {
   imageSrc: string;
   title: string;
   linkedin: string;
-  verification?: {
-    key: string;
-    until: Date;
-  };
   email?: string;
   medium?: string;
   focus: string;
@@ -23,7 +19,6 @@ const teamMembers: TeamMember[] = [
     imageSrc: '/headshotDevon.png',
     title: 'Managing Partner',
     linkedin: 'https://www.linkedin.com/in/devon-gethers/',
-    verification: { key: 'DEVON_VERIF_25_11', until: new Date('2025-11-28T09:00:00Z') },
     email: 'devon@meridianvc.com',
     medium: 'https://medium.com/@devon_45585',
     focus:

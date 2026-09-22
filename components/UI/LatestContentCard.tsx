@@ -1,3 +1,4 @@
+import { assetPath } from '@/site.config.mjs';
 import Image from 'next/image';
 import { FC } from 'react';
 import Text from '../Text/Text';
@@ -81,7 +82,7 @@ const LatestContentCard: FC<LatestContentCardProps> = ({ author, title, imagePat
     >
       <div style={cardMain}>
         <div style={imageContainerStyle}>
-          <Image src={imagePath} alt="Content Image" width={168} height={116} style={imageStyle} />
+          <Image src={assetPath(imagePath)} alt="Content Image" width={168} height={116} style={imageStyle} />
         </div>
         <div style={textStyle}>
           <Text variant="SmallFranklin" style={contentStyle}>

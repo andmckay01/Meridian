@@ -1,6 +1,6 @@
 'use client';
 
-import FillBottomModal from '@/components/Structural/FillBottomModal';
+import { assetPath } from '@/site.config.mjs';
 import Header from '@/components/Text/Header';
 import Text from '@/components/Text/Text';
 import { motion } from 'framer-motion';
@@ -9,7 +9,6 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { navHeight } from '../../Structural/NavHeight';
 import { XNotTwitter } from '../Icons/XNotTwitter';
-import { useReCaptcha } from 'next-recaptcha-v3';
 import '../ui.css';
 
 const contentStyle: React.CSSProperties = {
@@ -19,13 +18,13 @@ const contentStyle: React.CSSProperties = {
   flexDirection: 'row',
   flexWrap: 'wrap',
   paddingTop: 'clamp(40px, 12.5rem, 14rem)',
-  paddingBottom: '120px',
+  paddingBottom: '40px',
   alignContent: 'start',
   justifyContent: 'space-between',
   gap: 'clamp(20px, 40px, 40px)',
   width: 'clamp(70%, 90%, 1100px)',
   maxWidth: '1200px',
-  height: `calc(100lvh - ${navHeight} - 2px)`,
+  height: '100%',
   overflowX: 'hidden',
   overflowY: 'auto',
 };
@@ -78,17 +77,19 @@ const titleStyle: React.CSSProperties = {
 };
 
 const detailIconStyleTop: React.CSSProperties = {
-  position: 'fixed',
+  position: 'absolute',
   left: 0,
   top: 0,
   zIndex: -1,
   minWidth: '200px',
+  pointerEvents: 'none',
 };
 
 const detailIconStyleBottom: React.CSSProperties = {
-  position: 'fixed',
+  position: 'absolute',
   right: 0,
-  bottom: `calc(${navHeight} + ${navHeight}/3`,
+  bottom: 0,
+  zIndex: -1,
   pointerEvents: 'none',
 };
 
@@ -121,10 +122,6 @@ interface TeamModalProps {
   name: string;
   title: string;
   linkedin?: string;
-  verification?: {
-    key: string;
-    until: Date;
-  };
   email?: string;
   medium?: string;
   focus: string;
@@ -135,35 +132,11 @@ interface TeamModalProps {
   isOpen: boolean; // Added to control visibility
 }
 
-const grabVerifiedData = async (
-  verificationKey: string,
-  executeRecaptcha: (action: string) => Promise<string>
-): Promise<string> => {
-  const token = await executeRecaptcha('team_modal_verification');
-  const response = await fetch(`https://timeverif.meridianvc.com/${verificationKey}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token }),
-  });
-  if (!response.ok) throw new Error('Network response was not ok');
-  const data = await response.json();
-  return data.value;
-};
-
-const showVerification = (verification?: { key: string; until: Date }) => {
-  if (!verification) return false;
-  const currentDate = new Date();
-  if (verification.until && currentDate > verification.until) return false;
-  return true;
-};
-
-let reCatpchaRan = false;
 const TeamModal: FC<TeamModalProps> = ({
   imageSrc,
   name,
   title,
   linkedin,
-  verification,
   email,
   medium,
   focus,
@@ -173,43 +146,32 @@ const TeamModal: FC<TeamModalProps> = ({
   onClose,
   isOpen,
 }): ReactElement => {
-  //this style needs isOpen parameter
-  const modalStyle: React.CSSProperties = {
-    display: isOpen ? 'flex' : 'none', // Control visibility
+  const overlayStyle: React.CSSProperties = {
+    display: isOpen ? 'block' : 'none',
     position: 'fixed',
     top: `calc(${navHeight} - 2px)`,
-    bottom: 'auto',
-    left: 'calc(4vw - 1px)',
-    right: 'calc(4vw  - 1px)',
-    height: `calc(100lvh - ${navHeight})`,
-    justifyContent: 'center',
-    alignItems: 'center',
+    bottom: 0,
+    left: 0,
+    right: 0,
     backgroundColor: '#FFF5DC',
     zIndex: 9,
-    borderTop: 'solid 2px #444444',
-    borderRight: 'solid 2px #444444',
-    borderLeft: 'solid 2px #444444',
-    borderBottom: 'none',
+  };
+
+  const modalStyle: React.CSSProperties = {
+    display: 'flex',
+    position: 'absolute',
+    top: 0,
+    bottom: `calc(${navHeight} + ${navHeight} / 3 - 2px)`,
+    left: 'calc(4vw - 1px)',
+    right: 'calc(4vw - 1px)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    border: '2px solid #444444',
+    overflow: 'hidden',
+    isolation: 'isolate',
   };
 
   const [modalRoot, setModalRoot] = useState<HTMLElement | null>(null);
-  const [verifiedData, setVerifiedData] = useState<string | null>(null);
-  const { executeRecaptcha } = useReCaptcha();
-
-  useEffect(() => {
-    if (
-      !showVerification(verification) ||
-      !process.env.NEXT_PUBLIC_RECAPTCHA_ENABLED ||
-      reCatpchaRan ||
-      !verification?.key
-    )
-      return;
-    reCatpchaRan = true;
-
-    grabVerifiedData(verification.key, executeRecaptcha)
-      .then((data) => setVerifiedData(data))
-      .catch(() => {});
-  }, []);
 
   // This finds our div and attaches an HTML element to our document to be used by our portal for the modal
   useEffect(() => {
@@ -237,127 +199,117 @@ const TeamModal: FC<TeamModalProps> = ({
       {modalRoot
         ? ReactDOM.createPortal(
             <motion.div
-              style={modalStyle}
+              style={overlayStyle}
               initial={{ y: '100lvh' }}
               animate={{ y: 0 }}
               exit={{ y: '100lvh' }}
               transition={{ stiffness: 100, ease: 'easeInOut' }}
-              className="mobile-modal"
             >
-              <div style={contentStyle} className="team-modal-flex">
-                <button style={closeButtonStyle} onClick={onClose} className="modal-link">
-                  <XNotTwitter width={34} height={34} />
-                </button>
-                <Image
-                  src="/visionModalTop.svg"
-                  alt="Vision Icon"
-                  width={695}
-                  height={537}
-                  style={detailIconStyleTop}
-                  className="modalDetail"
-                  priority={true}
-                />
-                <Image
-                  src="/visionModalBottom.svg"
-                  alt="Vision Icon"
-                  width={298}
-                  height={213}
-                  style={detailIconStyleBottom}
-                  className="modalDetail"
-                  priority={true}
-                />
-                <div style={imageContainerStyle} className="team-modal-content">
-                  <Image src={imageSrc} alt={name} style={imageStyle} width={300} height={300} priority={true} />
-                  {/* <img src={imageSrc} alt={name} style={imageStyle} /> */}
-                  <div style={imageBackgroundFill}></div>
-                </div>
-                <div style={sectionStyle} className="team-modal-content">
-                  <div style={titleSectionStyle}>
+              <div style={modalStyle} className="mobile-modal">
+                <div style={contentStyle} className="team-modal-flex">
+                  <button style={closeButtonStyle} onClick={onClose} className="modal-link">
+                    <XNotTwitter width={34} height={34} />
+                  </button>
+                  <Image
+                    src={assetPath('/visionModalTop.svg')}
+                    alt="Vision Icon"
+                    width={695}
+                    height={537}
+                    style={detailIconStyleTop}
+                    className="modalDetail"
+                    priority={true}
+                  />
+                  <Image
+                    src={assetPath('/visionModalBottom.svg')}
+                    alt="Vision Icon"
+                    width={298}
+                    height={213}
+                    style={detailIconStyleBottom}
+                    className="modalDetail"
+                    priority={true}
+                  />
+                  <div style={imageContainerStyle} className="team-modal-content">
+                    <Image src={assetPath(imageSrc)} alt={name} style={imageStyle} width={300} height={300} priority={true} />
+                    {/* <img src={imageSrc} alt={name} style={imageStyle} /> */}
+                    <div style={imageBackgroundFill}></div>
+                  </div>
+                  <div style={sectionStyle} className="team-modal-content">
+                    <div style={titleSectionStyle}>
+                      <div>
+                        <Header type="H4" style={backgroundFillStyle}>
+                          {name}
+                        </Header>
+                        <Text variant="SmallFranklin" style={titleStyle}>
+                          {title}
+                        </Text>
+                      </div>
+                      <div style={linkSectionStyle} className="team-modal-links">
+                        {linkedin && (
+                          <div style={linkStyle} className="modal-link">
+                            <a href={linkedin} target="_blank" rel="noreferrer">
+                              <Text variant="SmallFranklin">LinkedIn </Text>
+                            </a>
+                            <img src={assetPath('/smallArrow.svg')} alt="small arrow" style={smallArrowStyle} />
+                          </div>
+                        )}
+                        {email && (
+                          <div style={linkStyle} className="modal-link">
+                            <a href={`mailto:${email}`} target="_blank" rel="noreferrer">
+                              <Text variant="SmallFranklin">Email</Text>
+                            </a>
+                            <img src={assetPath('/smallArrow.svg')} alt="small arrow" style={smallArrowStyle} />
+                          </div>
+                        )}
+                        {medium && (
+                          <div style={linkStyle} className="modal-link">
+                            <a href={medium} target="_blank" rel="noreferrer">
+                              <Text variant="SmallFranklin">Medium</Text>
+                            </a>
+                            <img src={assetPath('/smallArrow.svg')} alt="small arrow" style={smallArrowStyle} />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div style={{ marginBottom: '12px' }}>
+                      <Header type="H4" style={backgroundFillStyle}>
+                        {' '}
+                        Focus{' '}
+                      </Header>
+                      <Text variant="SmallFranklin" style={backgroundFillStyle}>
+                        {' '}
+                        {focus}{' '}
+                      </Text>
+                    </div>
                     <div>
                       <Header type="H4" style={backgroundFillStyle}>
-                        {name}
+                        {' '}
+                        Education{' '}
                       </Header>
-                      <Text variant="SmallFranklin" style={titleStyle}>
-                        {title}
+                      <Text variant="SmallFranklin" style={backgroundFillStyle}>
+                        {' '}
+                        {education}{' '}
                       </Text>
-                      {showVerification(verification) &&
-                        (verifiedData ? (
-                          <Text variant="SmallFranklin" style={titleStyle}>
-                            {verifiedData}
-                          </Text>
-                        ) : (
-                          <Text variant="SmallFranklin" style={titleStyle}>
-                            verification in progress...
-                          </Text>
-                        ))}
-                    </div>
-                    <div style={linkSectionStyle} className="team-modal-links">
-                      {linkedin && (
-                        <div style={linkStyle} className="modal-link">
-                          <a href={linkedin} target="_blank" rel="noreferrer">
-                            <Text variant="SmallFranklin">LinkedIn </Text>
-                          </a>
-                          <img src="./smallArrow.svg" alt="small arrow" style={smallArrowStyle} />
-                        </div>
-                      )}
-                      {email && (
-                        <div style={linkStyle} className="modal-link">
-                          <a href={`mailto:${email}`} target="_blank" rel="noreferrer">
-                            <Text variant="SmallFranklin">Email</Text>
-                          </a>
-                          <img src="./smallArrow.svg" alt="small arrow" style={smallArrowStyle} />
-                        </div>
-                      )}
-                      {medium && (
-                        <div style={linkStyle} className="modal-link">
-                          <a href={medium} target="_blank" rel="noreferrer">
-                            <Text variant="SmallFranklin">Medium</Text>
-                          </a>
-                          <img src="./smallArrow.svg" alt="small arrow" style={smallArrowStyle} />
-                        </div>
-                      )}
                     </div>
                   </div>
-                  <div style={{ marginBottom: '12px' }}>
-                    <Header type="H4" style={backgroundFillStyle}>
-                      {' '}
-                      Focus{' '}
-                    </Header>
-                    <Text variant="SmallFranklin" style={backgroundFillStyle}>
-                      {' '}
-                      {focus}{' '}
-                    </Text>
-                  </div>
-                  <div>
-                    <Header type="H4" style={backgroundFillStyle}>
-                      {' '}
-                      Education{' '}
-                    </Header>
-                    <Text variant="SmallFranklin" style={backgroundFillStyle}>
-                      {' '}
-                      {education}{' '}
-                    </Text>
-                  </div>
-                </div>
-                <div style={sectionStyle}>
-                  <div>
-                    <Header type="H4" style={backgroundFillStyle}>
-                      {' '}
-                      Experience{' '}
-                    </Header>
-                    <Text variant="SmallFranklin" style={backgroundFillStyle}>
-                      {' '}
-                      {experienceP1}{' '}
-                    </Text>
-                    <br />
-                    <Text variant="SmallFranklin" style={backgroundFillStyle}>
-                      {' '}
-                      {experienceP2}{' '}
-                    </Text>
+                  <div style={sectionStyle}>
+                    <div>
+                      <Header type="H4" style={backgroundFillStyle}>
+                        {' '}
+                        Experience{' '}
+                      </Header>
+                      <Text variant="SmallFranklin" style={backgroundFillStyle}>
+                        {' '}
+                        {experienceP1}{' '}
+                      </Text>
+                      <br />
+                      <Text variant="SmallFranklin" style={backgroundFillStyle}>
+                        {' '}
+                        {experienceP2}{' '}
+                      </Text>
+                    </div>
                   </div>
                 </div>
               </div>
-              <FillBottomModal />
             </motion.div>,
             modalRoot
           )

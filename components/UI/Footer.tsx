@@ -1,3 +1,4 @@
+import { assetPath } from '@/site.config.mjs';
 import Image from 'next/image';
 import { FC } from 'react';
 import Text from '../Text/Text';
@@ -124,7 +125,7 @@ const Footer: FC = () => {
               style={linkStyle}
               className="footer-link"
               rel="noreferrer">
-              <Image src="/linkedin.svg" alt="Linkedin" width={19} height={19} />
+              <Image src={assetPath('/linkedin.svg')} alt="Linkedin" width={19} height={19} />
               Connect on Linkedin
             </a>
             <a
@@ -133,7 +134,7 @@ const Footer: FC = () => {
               style={linkStyle}
               className="footer-link"
               rel="noreferrer">
-              <Image src="/email.svg" alt="Email" width={19} height={19} />
+              <Image src={assetPath('/email.svg')} alt="Email" width={19} height={19} />
               Email us
             </a>
             <a
@@ -142,13 +143,13 @@ const Footer: FC = () => {
               style={linkStyle}
               className="footer-link"
               rel="noreferrer">
-              <Image src="/medium.svg" alt="Medium" width={19} height={19} />
+              <Image src={assetPath('/medium.svg')} alt="Medium" width={19} height={19} />
               Read our writing
             </a>
           </div>
         </div>
         <div style={rightContainerStyle} className="footer-right-flex-column">
-          <img src="Stamps.jpg" alt="stamps" style={stampStyle} />
+          <img src={assetPath('/Stamps.jpg')} alt="stamps" style={stampStyle} />
           <div style={preparedBySectionStyle} className="prepared-by-section">
             <Text variant="BodyBaskerville">Prepared By:</Text>
             <a
@@ -156,23 +157,23 @@ const Footer: FC = () => {
               target="_blank"
               className="footer-link"
               rel="noreferrer">
-              <Image src="/signatureDevon.svg" alt="Devon Signature" width={140} height={28} />
+              <Image src={assetPath('/signatureDevon.svg')} alt="Devon Signature" width={140} height={28} />
             </a>
             <a
               href="https://www.linkedin.com/in/kevinkarltonhaney/"
               target="_blank"
               className="footer-link"
               rel="noreferrer">
-              <Image src="/signatureKarlton.svg" alt="Karlton Signature" width={140} height={28} />
+              <Image src={assetPath('/signatureKarlton.svg')} alt="Karlton Signature" width={140} height={28} />
             </a>
             <a href="https://www.linkedin.com/in/andmckay/" target="_blank" className="footer-link" rel="noreferrer">
-              <Image src="/signatureMckay.svg" alt="Mckay Signature" width={140} height={28} />
+              <Image src={assetPath('/signatureMckay.svg')} alt="Mckay Signature" width={140} height={28} />
             </a>
           </div>
         </div>
         <div style={bottomBadgeStyle}>
-          <Image src="/MVbadge.svg" alt="MV Badge" width={52} height={29} />
-          {new Date().getFullYear()} Meridian Ventures &ndash; All Rights Reserved
+          <Image src={assetPath('/MVbadge.svg')} alt="MV Badge" width={52} height={29} />
+          2025 Meridian Ventures &ndash; All Rights Reserved
         </div>
       </footer>
     </div>

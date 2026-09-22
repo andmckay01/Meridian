@@ -1,5 +1,6 @@
 'use client';
 
+import { assetPath } from '@/site.config.mjs';
 import { AnimatePresence, motion, useAnimation } from 'framer-motion';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -243,7 +244,7 @@ const Navbar: FC = () => {
   return (
     <>
       <motion.button
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onClick={() => window.scrollTo({ top: 0 })}
         style={{ ...wordmarkStyle, scale: wordmarkScale.current }} // this is effectively the initial scale
         animate={wordmarkControls}
         initial={{
@@ -253,7 +254,7 @@ const Navbar: FC = () => {
         }}
         key="wordmark"
       >
-        <img src="/meridianWordmark.svg" alt="Meridian Wordmark" />
+        <img src={assetPath('/meridianWordmark.svg')} alt="Meridian Wordmark" />
       </motion.button>
 
       {showWordmarkCover && <div style={wordmarkCoverStyle}></div>}

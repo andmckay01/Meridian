@@ -1,3 +1,4 @@
+import { assetPath } from '@/site.config.mjs';
 import Image from 'next/image';
 import { FC } from 'react';
 import Header from '../../Text/Header';
@@ -43,7 +44,7 @@ const imageStyle: React.CSSProperties = {
 const TeamCard: FC<TeamCardProps> = ({ name, role, imageSrc, onCardClick }) => {
   return (
     <div style={cardStyle} className="team-card-hover" onClick={onCardClick}>
-      <Image src={imageSrc} alt={name} width={300} height={300} style={imageStyle} fill={false} />
+      <Image src={assetPath(imageSrc)} alt={name} width={300} height={300} style={imageStyle} fill={false} />
       <div>
         <Header type="H4" lineHeight="clamp(4px, 1.25rem, 40px)">
           {name}

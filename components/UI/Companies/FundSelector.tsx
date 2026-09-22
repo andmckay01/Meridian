@@ -43,7 +43,7 @@ export const FundSelector: React.FC = () => {
   const { fund, setFund } = useCompanyContext();
 
   return (
-    <div className="relative flex justify-center gap-10 mb-[clamp(0px, 3vw, 50px)]">
+    <div className="relative flex justify-center gap-10" style={{ marginBottom: 'clamp(3rem, 6vw, 5rem)' }}>
       {(['I', 'II'] as const).map((fundOption) => (
         <FundSelectButton key={fundOption} current={fund === fundOption} fund={fundOption} setFund={setFund} />
       ))}
