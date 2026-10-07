@@ -1,9 +1,7 @@
-import { ReCaptchaProvider } from 'next-recaptcha-v3';
 import AnimationProvider from '@/components/Animation/AnimationContext';
-import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata } from 'next';
-import { Libre_Franklin } from 'next/font/google';
 import localfont from 'next/font/local';
+import { assetPath, siteOrigin, siteUrl } from '@/site.config.mjs';
 
 const Baskerville = localfont({
   src: [
@@ -15,37 +13,39 @@ const Baskerville = localfont({
   variable: '--font-baskerville',
 });
 
-const Franklin = Libre_Franklin({
-  subsets: ['latin'],
-  weight: ['300'], //extra-lightop
-  style: ['normal'],
+const Franklin = localfont({
+  src: '../node_modules/@fontsource/libre-franklin/files/libre-franklin-latin-300-normal.woff2',
+  weight: '300',
+  style: 'normal',
   variable: '--font-franklin',
 });
 
+const shareImage = new URL(assetPath('/opengraph-image.png'), siteOrigin).href;
+
 export const metadata: Metadata = {
-  title: 'Meridian Ventures',
-  description: 'Bold ideas and visionary founders',
-  metadataBase: new URL('https://meridianvc.com'),
+  title: 'Meridian Ventures — Project Archive',
+  description: 'The 2025 Meridian Ventures website, preserved in McKay Anderson’s project portfolio. Bold ideas and visionary founders.',
+  metadataBase: new URL(siteOrigin),
+  alternates: { canonical: siteUrl },
+  openGraph: {
+    title: 'Meridian Ventures — Project Archive',
+    description: 'The 2025 Meridian Ventures website, preserved by McKay Anderson.',
+    url: siteUrl,
+    type: 'website',
+    images: [shareImage],
+  },
+  twitter: { card: 'summary_large_image', images: [shareImage] },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${Baskerville.variable} ${Franklin.variable}`}>
-      <AnimationProvider>
-        <body>
-          <MaybeReCatpchaProvider>
-            {children}
-            <div id="modal-root"></div>
-            <GoogleAnalytics gaId="G-Y3B9NBHM3E" />
-          </MaybeReCatpchaProvider>
-        </body>
-      </AnimationProvider>
+      <body>
+        <AnimationProvider>
+          {children}
+          <div id="modal-root"></div>
+        </AnimationProvider>
+      </body>
     </html>
   );
-}
-
-function MaybeReCatpchaProvider({ children }: { children: React.ReactNode }) {
-  if (process.env.NEXT_PUBLIC_RECAPTCHA_ENABLED === 'true')
-    return <ReCaptchaProvider useEnterprise>{children}</ReCaptchaProvider>;
-  return <>{children}</>;
 }

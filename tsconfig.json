@@ -11,7 +11,6 @@
     "target": "esnext",
     "allowJs": true,
     "noEmit": true,
-    "composite": true,
     "incremental": true,
     "moduleDetection": "force",
     "declaration": true,
@@ -43,8 +42,8 @@
     "**/*.tsx",
     "next-env.d.ts",
     "next.config.ts",
-    ".next/types/**/*.ts",
-    "../../reset.d.ts"
+    "site.config.mjs",
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules", ".next", ".turbo", "dist", "build"]
 }

@@ -1,5 +1,6 @@
 // This component is used for each of the 3 principles cards
 
+import { assetPath } from '@/site.config.mjs';
 import Image from 'next/image';
 import { FC, ReactNode } from 'react';
 import Text from '../Text/Text';
@@ -45,7 +46,7 @@ const UICard: FC<UICardProps> = ({ title, imagePath, numberDisplay, content }) =
     <div style={cardStyle}>
       <div style={headerStyle}>
         <h3>{title}</h3>
-        <Image src={imagePath} alt="Principle Icon" width={100} height={30} style={imgStyle} priority />
+        <Image src={assetPath(imagePath)} alt="Principle Icon" width={100} height={30} style={imgStyle} priority />
         <h3>{numberDisplay}</h3>
       </div>
       <Text variant="BodyBaskerville" style={{ paddingLeft: '3px' }}>

@@ -71,7 +71,6 @@ const TeamCardContainer: FC<TeamCardContainerProps> = ({ style, teamMembers }) =
             name={selectedMember.name}
             title={selectedMember.title}
             linkedin={selectedMember.linkedin}
-            verification={selectedMember.verification}
             email={selectedMember.email}
             medium={selectedMember.medium}
             focus={selectedMember.focus}

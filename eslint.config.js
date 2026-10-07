@@ -1,11 +1,17 @@
-import { nextConfig } from '@meridian/config/eslint/nextjs';
+import { FlatCompat } from '@eslint/eslintrc';
+
+const compat = new FlatCompat({ baseDirectory: import.meta.dirname });
 
 /** @type {import("eslint").Linter.Config} */
-export default [
-  ...nextConfig,
-  { files: ['next-env.d.ts'], rules: { '@typescript-eslint/triple-slash-reference': 'off' } },
+const eslintConfig = [
+  ...compat.extends('next/core-web-vitals'),
+  { ignores: ['.next/**', 'out/**', 'dist/**', 'next-env.d.ts'] },
   {
-    files: ['next.config.ts'],
-    rules: { '@typescript-eslint/no-unsafe-type-assertion': 'off', 'import/no-default-export': 'off' },
+    rules: {
+      // The archive serves original images directly, without an image server.
+      '@next/next/no-img-element': 'off',
+    },
   },
 ];
+
+export default eslintConfig;

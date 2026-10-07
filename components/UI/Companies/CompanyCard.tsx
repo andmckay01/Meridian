@@ -1,3 +1,4 @@
+import { assetPath } from '@/site.config.mjs';
 import Image from 'next/image';
 import { FC } from 'react';
 import '../ui.css';
@@ -75,7 +76,7 @@ const CompanyCard: FC<CompanyCardProps> = ({
       <a href={websiteUrl} target="_blank" rel="noopener noreferrer" style={{ position: 'relative' }}>
         <div style={imageWrapperStyle}>
           <Image
-            src={logoSrc}
+            src={assetPath(logoSrc)}
             alt="Company Logo"
             width={165}
             height={150}

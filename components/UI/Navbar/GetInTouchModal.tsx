@@ -1,3 +1,4 @@
+import { assetPath } from '@/site.config.mjs';
 import FillBottomModal from '@/components/Structural/FillBottomModal';
 import Header from '@/components/Text/Header';
 import Text from '@/components/Text/Text';
@@ -116,7 +117,7 @@ const GetInTouchModal: FC<TeamModalProps> = ({ onClose, isOpen }) => {
       <div style={contentStyle} className="get-in-touch-content-flex">
         <div style={imageContainerStyle}>
           <Image
-            src="/shipWheel.png"
+            src={assetPath('/shipWheel.png')}
             alt="Ship Wheel"
             width={300}
             height={400}

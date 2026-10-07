@@ -1,6 +1,10 @@
 import type { NextConfig } from 'next';
+import { basePath, siteOrigin } from './site.config.mjs';
 
 const nextConfig = {
+  output: 'export',
+  basePath,
+  images: { unoptimized: true },
   trailingSlash: true,
   poweredByHeader: false,
   transpilePackages: [],
@@ -15,11 +19,10 @@ const nextConfig = {
       '.cjs': ['.cts', '.cjs'],
     },
   },
-  compiler: { removeConsole: process.env.ENV === 'production' ? { exclude: ['error'] } : false },
-  eslint: { ignoreDuringBuilds: true },
+  compiler: { removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error'] } : false },
   env: {
-    NEXT_PUBLIC_RECAPTCHA_ENABLED: 'true',
-    NEXT_PUBLIC_RECAPTCHA_SITE_KEY: '6Le9VhUsAAAAAEGmqOkao0_FK9tee2rIkCB5q9xX',
+    NEXT_PUBLIC_BASE_PATH: basePath,
+    NEXT_PUBLIC_SITE_ORIGIN: siteOrigin,
   },
 } satisfies NextConfig;
 

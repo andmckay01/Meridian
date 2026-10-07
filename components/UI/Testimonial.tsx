@@ -1,3 +1,4 @@
+import { assetPath } from '@/site.config.mjs';
 import Image from 'next/image';
 import { FC } from 'react';
 import Text from '../Text/Text';
@@ -82,7 +83,7 @@ const Testimonial: FC<TestimonialProps> = ({ alignment, statement, name, company
 
   return (
     <div style={containerStyle}>
-      <Image src={imageSrc} alt={name} width={100} height={100} style={imageStyle} />
+      <Image src={assetPath(imageSrc)} alt={name} width={100} height={100} style={imageStyle} />
       <div className="testimonialContent">
         <Text variant="BodyBaskerville" className="testimonialStatement" style={statementStyle}>
           <span style={leftQuoteStyle}>“</span>

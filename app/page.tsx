@@ -1,3 +1,4 @@
+import { assetPath } from '@/site.config.mjs';
 import Section5Companies from '@/components/Sections/Investments';
 import FillSection from '@/components/Structural/FillSection';
 import FillVertical from '@/components/Structural/FillVertical';
@@ -113,7 +114,7 @@ const Home: FC = () => {
           <Section id="landing" style={landingStyle}>
             <div>
               <Spacer />
-              <Image src="/compass.svg" alt="Compass" width={100} height={100} style={compassStyle} priority />
+              <Image src={assetPath('/compass.svg')} alt="Compass" width={100} height={100} style={compassStyle} priority />
               <Header
                 type="H1"
                 paddingLeft="clamp(3vw, 3vw, 20px)"
@@ -127,7 +128,7 @@ const Home: FC = () => {
             </div>
             <div>
               <Image
-                src="/legend.svg"
+                src={assetPath('/legend.svg')}
                 alt="Legend"
                 width={500}
                 height={300}
